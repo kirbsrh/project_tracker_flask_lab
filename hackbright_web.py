@@ -13,13 +13,19 @@ def get_student():
 
     github = request.args.get('github')
 
-    first, last, github = hackbright.get_student_by_github(github)
+    first, last, github = hackbright.get_student_by_github(github)#get student by github return a tuple
+    rows = hackbright.get_grades_by_github(github)# get grades by github return a list. 
+
+    print(rows)
 
     html = render_template("student_info.html",
         first = first,
         last = last,
-        github = github)
-
+        github = github,
+        rows = rows,
+        grade = rows[1],
+        project_title = rows[0])         
+                                                 
     return html
 
 
@@ -30,7 +36,7 @@ def get_student_form():
     return render_template("student_search.html")
 
 
-@app.route("/student_add", methods = ['POST'])
+@app.route("/student_add")
 def add_student():
 
     
@@ -45,7 +51,7 @@ def confirm_new_student():
     last_name = request.form.get('last_name')
     github = request.form.get('github')
 
-    first_name, last_name, github = hackbright.make_new_student(first_name, last_name, github)
+    hackbright.make_new_student(first_name, last_name, github)
 
     return render_template("confirmed_new_student.html", first_name = first_name, last_name = last_name, github = github)
 
